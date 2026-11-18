@@ -1,0 +1,12 @@
+{
+  "roll": {
+    "sounds": [
+      "combatrollantique:roll"
+    ]
+  },
+  "roll_cooldown_ready": {
+    "sounds": [
+      "combatrollantique:roll_cooldown_ready"
+    ]
+  }
+}

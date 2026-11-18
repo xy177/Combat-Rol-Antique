@@ -29,11 +29,11 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run/client')
-            property 'fml.coreMods.load', 'xy177.combatrolantique.core.RollLoadingPlugin'
+            property 'fml.coreMods.load', 'xy177.combatrollantique.core.RollLoadingPlugin'
         }
         server {
             workingDirectory project.file('run/server')
-            property 'fml.coreMods.load', 'xy177.combatrolantique.core.RollLoadingPlugin'
+            property 'fml.coreMods.load', 'xy177.combatrollantique.core.RollLoadingPlugin'
         }
     }
 }
@@ -66,7 +66,7 @@ jar {
     from('NOTICE')
     manifest {
         attributes(
-            'FMLCorePlugin': 'xy177.combatrolantique.core.RollLoadingPlugin',
+            'FMLCorePlugin': 'xy177.combatrollantique.core.RollLoadingPlugin',
             'FMLCorePluginContainsFMLMod': 'true',
             'Specification-Title': project.mod_name,
             'Specification-Vendor': 'xy177',
