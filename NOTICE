@@ -1,0 +1,17 @@
+Combat Rol Antique
+Copyright (c) 2026 xy177
+
+A Minecraft 1.12.2 port of Combat Roll by ZsoltMolnarrr.
+Upstream project: https://www.curseforge.com/minecraft/mc-mods/combat-roll
+Upstream source: https://github.com/ZsoltMolnarrr/CombatRoll
+
+Distributed under the GNU General Public License version 3.
+See LICENSE for the license text.
+
+Porting baseline: Combat Roll 2.0.6+1.21.1.
+Original roll animation by Daedelus; animation, HUD textures and sounds
+are retained from Combat Roll under its GNU GPL version 3 license.
+
+The embedded keyframe interpolation and animation speed/fade logic is
+adapted from minecraftPlayerAnimator by KosmX, Copyright (c) 2022 KosmX,
+under the MIT License. See META-INF/licenses/player-animation-MIT.txt.

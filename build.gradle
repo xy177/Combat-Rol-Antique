@@ -1,0 +1,105 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net/' }
+        mavenCentral()
+    }
+    configurations {
+    forgeDevelopmentReference { transitive = false }
+}
+
+dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.0.197'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+
+version = project.mod_version
+group = project.mod_group
+archivesBaseName = "${project.mod_id}-${project.minecraft_version}"
+sourceCompatibility = targetCompatibility = '1.8'
+
+minecraft {
+    // 使用官方 1.12.2 MDK 的开发映射。
+    // Use the development mappings from the official 1.12.2 MDK.
+    mappings channel: 'snapshot', version: '20171003-1.12'
+
+    runs {
+        client {
+            workingDirectory project.file('run/client')
+            property 'fml.coreMods.load', 'xy177.combatrolantique.core.RollLoadingPlugin'
+        }
+        server {
+            workingDirectory project.file('run/server')
+            property 'fml.coreMods.load', 'xy177.combatrolantique.core.RollLoadingPlugin'
+        }
+    }
+}
+
+dependencies {
+    // Forge 版本仅用于编译，不声明运行时 Forge 版本限制。
+    // The Forge version is used for compilation without a runtime Forge version restriction.
+    minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
+    forgeDevelopmentReference "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}:universal"
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', project.minecraft_version
+    filteringCharset = 'UTF-8'
+
+    // 仅替换版本占位符，保留 JSON 转义与中文内容。
+    // Replace only version tokens, preserving JSON escapes and Chinese text.
+    filesMatching(['mcmod.info', 'version.properties']) {
+        filter ReplaceTokens, tokens: [version: project.version.toString(), mcversion: project.minecraft_version]
+    }
+}
+
+jar {
+    from('LICENSE')
+    from('NOTICE')
+    manifest {
+        attributes(
+            'FMLCorePlugin': 'xy177.combatrolantique.core.RollLoadingPlugin',
+            'FMLCorePluginContainsFMLMod': 'true',
+            'Specification-Title': project.mod_name,
+            'Specification-Vendor': 'xy177',
+            'Specification-Version': '1',
+            'Implementation-Title': project.mod_name,
+            'Implementation-Version': project.version,
+            'Implementation-Vendor': 'xy177'
+        )
+    }
+}
+
+jar.finalizedBy('reobfJar')
+
+// ForgeGradle 3 的开发运行环境需要将类与资源输出到同一目录。
+// ForgeGradle 3 development runs require classes and resources in the same output directory.
+sourceSets.each {
+    def outputDirectory = layout.buildDirectory.file("sourcesSets/$it.name").get().asFile
+    it.output.resourcesDir = outputDirectory
+    it.java.outputDir = outputDirectory
+}
+
+// 旧版合并工具附带的 Side 枚举含额外值；开发启动时优先使用官方 Forge 的类。
+// Prefer the official Forge Side class during development; the legacy merge tool includes an extra enum value.
+task prepareForgeDevelopmentRuntime(type: Jar) {
+    from { zipTree(configurations.forgeDevelopmentReference.singleFile) }
+    include 'net/minecraftforge/fml/relauncher/Side.class'
+    archiveName = 'forge-development-side.jar'
+    destinationDir = file("$buildDir/dev-runtime")
+}
+
+tasks.withType(JavaExec).matching { it.name in ['runClient', 'runServer'] }.all {
+    dependsOn prepareForgeDevelopmentRuntime
+    doFirst {
+        classpath = files(prepareForgeDevelopmentRuntime.archivePath) + classpath
+    }
+}

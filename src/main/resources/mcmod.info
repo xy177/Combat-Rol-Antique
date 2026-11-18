@@ -1,0 +1,15 @@
+[
+  {
+    "modid": "combatrolantique",
+    "name": "Combat Rol Antique",
+    "description": "This mod is a Minecraft 1.12.2 Forge port of Combat Roll.\nOriginal mod repository: https://github.com/ZsoltMolnarrr/CombatRoll\nAdds a combat roll ability, with related attributes and enchantments.\nPress R to roll by default. Enhance your rolls with Longfooted, Acrobat and Multi-Roll.",
+    "version": "@version@",
+    "mcversion": "@mcversion@",
+    "url": "https://github.com/xy177/Combat-Rol-Antique",
+    "authorList": ["xy177"],
+    "credits": "Combat Roll: Daedelus; PlayerAnimator: KosmX.",
+    "logoFile": "icon.png",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
